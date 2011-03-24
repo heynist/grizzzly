@@ -23,7 +23,7 @@ class StoryController {
         def storyInstance = new Story(params)
         if (storyInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'story.label', default: 'Story'), storyInstance.id])}"
-            sendMessage("activemq:input.queue", "Story created: " + storyInstance.code)
+            sendMessage("activemq:grizzzly.internal.story.queue", "Story created: " + storyInstance.code)
             redirect(action: "show", id: storyInstance.id)
         }
         else {
@@ -36,6 +36,7 @@ class StoryController {
         if (!storyInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'story.label', default: 'Story'), params.id])}"
             redirect(action: "list")
+            // => in here, we are not going to send out any log event to the Grizzzly Bus module
         }
         else {
             [storyInstance: storyInstance]
@@ -68,7 +69,7 @@ class StoryController {
             storyInstance.properties = params
             if (!storyInstance.hasErrors() && storyInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'story.label', default: 'Story'), storyInstance.id])}"
-	            sendMessage("activemq:input.queue", "Story created: " + storyInstance.code)
+	            sendMessage("activemq:grizzzly.internal.story.queue", "Story updated: " + storyInstance.code)
                 redirect(action: "show", id: storyInstance.id)
             }
             else {
@@ -85,8 +86,10 @@ class StoryController {
         def storyInstance = Story.get(params.id)
         if (storyInstance) {
             try {
+	            def storyCode = storyInstance.code
                 storyInstance.delete(flush: true)
                 flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'story.label', default: 'Story'), params.id])}"
+                sendMessage("activemq:grizzzly.internal.story.queue", "Story deleted: " + storyCode)
                 redirect(action: "list")
             }
             catch (org.springframework.dao.DataIntegrityViolationException e) {

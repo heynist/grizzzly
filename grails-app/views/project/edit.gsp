@@ -60,10 +60,17 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="actors"><g:message code="project.actors.label" default="Actors" /></label>
+                                  <label for="modules"><g:message code="project.modules.label" default="Modules" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: projectInstance, field: 'actors', 'errors')}">
-                                    <g:select name="actors" from="${grizzzly.Actor.list()}" multiple="yes" optionKey="id" size="5" value="${projectInstance?.actors*.id}" />
+                                <td valign="top" class="value ${hasErrors(bean: projectInstance, field: 'modules', 'errors')}">
+                                    
+<ul>
+<g:each in="${projectInstance?.modules?}" var="m">
+    <li><g:link controller="moduleInstance" action="show" id="${m.id}">${m?.encodeAsHTML()}</g:link></li>
+</g:each>
+</ul>
+<g:link controller="moduleInstance" action="create" params="['project.id': projectInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'moduleInstance.label', default: 'ModuleInstance')])}</g:link>
+
                                 </td>
                             </tr>
                         
@@ -127,6 +134,22 @@
 </g:each>
 </ul>
 <g:link controller="role" action="create" params="['project.id': projectInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'role.label', default: 'Role')])}</g:link>
+
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="actors"><g:message code="project.actors.label" default="Actors" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: projectInstance, field: 'actors', 'errors')}">
+                                    
+<ul>
+<g:each in="${projectInstance?.actors?}" var="a">
+    <li><g:link controller="actor" action="show" id="${a.id}">${a?.encodeAsHTML()}</g:link></li>
+</g:each>
+</ul>
+<g:link controller="actor" action="create" params="['project.id': projectInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'actor.label', default: 'Actor')])}</g:link>
 
                                 </td>
                             </tr>

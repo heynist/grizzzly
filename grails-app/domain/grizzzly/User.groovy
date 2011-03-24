@@ -6,6 +6,7 @@ class User {
 	String firstName
 	String lastName
 	String email
+	Customer customer
 	
     static hasMany = [membership:Member]
 	
@@ -16,4 +17,5 @@ class User {
     String toString() {
     	login + " (" + lastName + " " + firstName + ")"
     }
+    
 }

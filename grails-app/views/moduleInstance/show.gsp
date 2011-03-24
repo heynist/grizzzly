@@ -1,10 +1,10 @@
 
-<%@ page import="grizzzly.User" %>
+<%@ page import="grizzzly.ModuleInstance" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
+        <g:set var="entityName" value="${message(code: 'moduleInstance.label', default: 'ModuleInstance')}" />
         <title><g:message code="default.show.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -23,54 +23,33 @@
                     <tbody>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.id.label" default="Id" /></td>
+                            <td valign="top" class="name"><g:message code="moduleInstance.id.label" default="Id" /></td>
                             
-                            <td valign="top" class="value">${fieldValue(bean: userInstance, field: "id")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.login.label" default="Login" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: userInstance, field: "login")}</td>
+                            <td valign="top" class="value">${fieldValue(bean: moduleInstanceInstance, field: "id")}</td>
                             
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.customer.label" default="Customer" /></td>
+                            <td valign="top" class="name"><g:message code="moduleInstance.project.label" default="Project" /></td>
                             
-                            <td valign="top" class="value"><g:link controller="customer" action="show" id="${userInstance?.customer?.id}">${userInstance?.customer?.encodeAsHTML()}</g:link></td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.email.label" default="Email" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: userInstance, field: "email")}</td>
+                            <td valign="top" class="value"><g:link controller="project" action="show" id="${moduleInstanceInstance?.project?.id}">${moduleInstanceInstance?.project?.encodeAsHTML()}</g:link></td>
                             
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.firstName.label" default="First Name" /></td>
+                            <td valign="top" class="name"><g:message code="moduleInstance.module.label" default="Module" /></td>
                             
-                            <td valign="top" class="value">${fieldValue(bean: userInstance, field: "firstName")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.lastName.label" default="Last Name" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: userInstance, field: "lastName")}</td>
+                            <td valign="top" class="value"><g:link controller="module" action="show" id="${moduleInstanceInstance?.module?.id}">${moduleInstanceInstance?.module?.encodeAsHTML()}</g:link></td>
                             
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.membership.label" default="Membership" /></td>
+                            <td valign="top" class="name"><g:message code="moduleInstance.props.label" default="Props" /></td>
                             
                             <td valign="top" style="text-align: left;" class="value">
                                 <ul>
-                                <g:each in="${userInstance.membership}" var="m">
-                                    <li><g:link controller="member" action="show" id="${m.id}">${m?.encodeAsHTML()}</g:link></li>
+                                <g:each in="${moduleInstanceInstance.props}" var="p">
+                                    <li><g:link controller="modulePropertyInstance" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link></li>
                                 </g:each>
                                 </ul>
                             </td>
@@ -82,7 +61,7 @@
             </div>
             <div class="buttons">
                 <g:form>
-                    <g:hiddenField name="id" value="${userInstance?.id}" />
+                    <g:hiddenField name="id" value="${moduleInstanceInstance?.id}" />
                     <span class="button"><g:actionSubmit class="edit" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" /></span>
                     <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
                 </g:form>

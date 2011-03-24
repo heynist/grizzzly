@@ -42,6 +42,15 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
+                                  <label for="customer"><g:message code="user.customer.label" default="Customer" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'customer', 'errors')}">
+                                    <g:select name="customer.id" from="${grizzzly.Customer.list()}" optionKey="id" value="${userInstance?.customer?.id}"  />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
                                   <label for="email"><g:message code="user.email.label" default="Email" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'email', 'errors')}">

@@ -1,3 +1,4 @@
+import grizzzly.Customer
 import grizzzly.User
 import grizzzly.Project
 import grizzzly.Role
@@ -8,8 +9,13 @@ import grizzzly.Story
 import grizzzly.Iteration
 import grizzzly.Release
 import java.util.Date
+import grizzzly.Module
+import grizzzly.ModuleInstance
+import grizzzly.ModuleProperty
+import grizzzly.ModulePropertyInstance
 
 class BootStrap {
+	Customer custForeSee
 	User userHeynist
 	User userKimpema
 	Project projectGrizzzly
@@ -26,11 +32,22 @@ class BootStrap {
 	Story us002
 	Release rel001
 	Iteration it001
+	Module modWiki
+	Module modCI
+	ModuleInstance projGrizzzlyCI
+	ModuleInstance projGrizzzlyWiki
+	ModuleProperty modWikiUrl
+	ModuleProperty modCIUrl
+	ModulePropertyInstance modProjectGrizzzlyWikiUrl
+	ModulePropertyInstance modProjectGrizzzlyCIUrl
 
     def init = { servletContext ->
+    	if (!Customer.count()) {
+    		custForeSee = new Customer(name: "ForeSee").save(failOnError: true)
+    	}
         if (!User.count()) {
-            userHeynist = new User(login: "heynist", firstName: "Steven", lastName: "Heyninck", email: "steven.heyninck@cronos.be").save(failOnError: true)
-            userKimpema = new User(login: "kimpema", firstName: "Marc", lastName: "Kimpe", email: "marc.kimpe@cronos.be").save(failOnError: true)
+            userHeynist = new User(login: "heynist", firstName: "Steven", lastName: "Heyninck", email: "steven.heyninck@cronos.be",customer: custForeSee).save(failOnError: true)
+            userKimpema = new User(login: "kimpema", firstName: "Marc", lastName: "Kimpe", email: "marc.kimpe@cronos.be",customer: custForeSee).save(failOnError: true)
         } else {
         	userHeynist = User.findByLogin("heynist")
         	userKimpema = User.findByLogin("kimpema")
@@ -75,6 +92,24 @@ class BootStrap {
             us002.iteration = it001
             it001.save(failOnError: true)
         }
+
+    	if (!Module.count()) {
+    		modWiki = new Module(name: "MediaWiki").save(failOnError: true)
+			modCI = new Module(name: "Jenkins (Hudson)").save(failOnError: true)
+    	}
+    	if (!ModuleInstance.count()) {
+    		projGrizzzlyWiki = new ModuleInstance(project: projectGrizzzly, module: modWiki).save(failOnError: true)
+			projGrizzzlyCI = new ModuleInstance(project: projectGrizzzly, module: modCI).save(failOnError: true)
+    	}
+    	if (!ModuleProperty.count()) {
+    		modWikiUrl = new ModuleProperty(name: "MediaWiki Url", module: modWiki, dataType: "String").save(failOnError: true)
+			modCIUrl = new ModuleProperty(name: "Jenkins Url", module: modCI, dataType: "String").save(failOnError: true)
+    	}
+    	if (!ModulePropertyInstance.count()) {
+    		modProjectGrizzzlyWikiUrl = new ModulePropertyInstance(moduleInstance: projGrizzzlyWiki, moduleProperty: modWikiUrl, value: "http://wiki.grizzzly.be").save(failOnError: true)
+			modProjectGrizzzlyCIUrl = new ModulePropertyInstance(moduleInstance: projGrizzzlyCI, moduleProperty: modCIUrl, value: "http://ci.grizzzly.be").save(failOnError: true)
+    	}
+
     }
     def destroy = {
     }
