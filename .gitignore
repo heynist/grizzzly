@@ -1,0 +1,15 @@
+# Grails stuff
+plugins/core/
+web-app/WEB-INF
+*Db*
+*.log
+
+# Maven output directory
+target/
+
+# Eclipse Project files
+.classpath
+.settings/
+
+# OS X generated files
+.DS_Store
