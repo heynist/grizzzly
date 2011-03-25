@@ -18,7 +18,7 @@ before "setup", {
 	}
 
   }
-  scenario "A customer can declare not declare a user twice", {
+  scenario "A customer can not declare a user twice", {
         given "a Customer", {
                 aCustomer = new Customer(name:"Cronos")
 	}
