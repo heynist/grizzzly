@@ -1,8 +1,8 @@
 package grizzzly
 
 class Release {
-	String name
-	Date releaseDate
+        String name
+        Date releaseDate
 	
     static belongsTo = [project:Project]
 
