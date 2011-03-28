@@ -3,6 +3,8 @@ before "setup", {
 Requirement aRequirement
 Story story1
 Story story2
+Story AStory
+Actor anActor
 
   scenario "a story can reference another story", {
         given "two stories : story1 and Story2", {
@@ -36,5 +38,20 @@ Story story2
                 story2.requirement.stories.contains(story2).shouldBe true
 	}
   }
+scenario "a story can be in the form of As_a (actor) I want to... so that...", {
+        given "a story and an actor", {
+                aStory  = new Story(code:"story")
+                anActor = new Actor(name:"project owner")
+	}
+	when "i can write the story", {
+                aStory.asA = anActor
+                aStory.iWantTo = "describe my stories"
+                aStory.soThat = "they are testable"
+	}
+	then "in the form as_a actor I want to ... so that ....", {
+                aStory.shouldBe "story (project owner: describe my stories)"
+	}
+  }
+
 }
 
