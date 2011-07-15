@@ -87,6 +87,31 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
+                                  <label for="subStoryOf"><g:message code="story.subStoryOf.label" default="Sub Story Of" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: storyInstance, field: 'subStoryOf', 'errors')}">
+                                    <g:select name="subStoryOf.id" from="${grizzzly.Story.list()}" optionKey="id" value="${storyInstance?.subStoryOf?.id}"  />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="subStories"><g:message code="story.subStories.label" default="Sub Stories" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: storyInstance, field: 'subStories', 'errors')}">
+                                    
+<ul>
+<g:each in="${storyInstance?.subStories?}" var="s">
+    <li><g:link controller="story" action="show" id="${s.id}">${s?.encodeAsHTML()}</g:link></li>
+</g:each>
+</ul>
+<g:link controller="story" action="create" params="['story.id': storyInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'story.label', default: 'Story')])}</g:link>
+
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
                                   <label for="requirement"><g:message code="story.requirement.label" default="Requirement" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: storyInstance, field: 'requirement', 'errors')}">

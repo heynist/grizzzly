@@ -9,6 +9,9 @@ class Story {
 	Requirement requirement
 	Iteration iteration
 	
+	static belongsTo = [subStoryOf:Story]
+	static hasMany = [subStories:Story]
+	
     static constraints = {
     	code(blank:false)
     	owner(blank:false)
@@ -16,6 +19,8 @@ class Story {
     	iWantTo(blank:false)
     	soThat(blank:true, nullable:true)
     	iteration(blank:true, nullable: true)
+    	subStoryOf(blank:true)
+    	subStories(blank:true, nullable:true)
     }
     
     String toString() {

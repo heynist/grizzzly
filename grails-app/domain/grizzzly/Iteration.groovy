@@ -12,7 +12,7 @@ class Iteration {
     	name(blank:false)
     }
     
-    static hasMany = [stories:Story,scenarios:Scenario]
+    static hasMany = [stories:Story]
     
     String toString() {
     	name

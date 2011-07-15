@@ -1,5 +1,8 @@
 package grizzzly
 
+import groovy.util.XmlSlurper
+import groovy.xml.MarkupBuilder
+
 class StoryController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -22,8 +25,9 @@ class StoryController {
     def save = {
         def storyInstance = new Story(params)
         if (storyInstance.save(flush: true)) {
+        	notify(storyInstance)
+            
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'story.label', default: 'Story'), storyInstance.id])}"
-            sendMessage("activemq:grizzzly.internal.story.queue", "Story created: " + storyInstance.code)
             redirect(action: "show", id: storyInstance.id)
         }
         else {
@@ -36,7 +40,6 @@ class StoryController {
         if (!storyInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'story.label', default: 'Story'), params.id])}"
             redirect(action: "list")
-            // => in here, we are not going to send out any log event to the Grizzzly Bus module
         }
         else {
             [storyInstance: storyInstance]
@@ -68,8 +71,8 @@ class StoryController {
             }
             storyInstance.properties = params
             if (!storyInstance.hasErrors() && storyInstance.save(flush: true)) {
+	        	notify(storyInstance)
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'story.label', default: 'Story'), storyInstance.id])}"
-	            sendMessage("activemq:grizzzly.internal.story.queue", "Story updated: " + storyInstance.code)
                 redirect(action: "show", id: storyInstance.id)
             }
             else {
@@ -86,10 +89,8 @@ class StoryController {
         def storyInstance = Story.get(params.id)
         if (storyInstance) {
             try {
-	            def storyCode = storyInstance.code
                 storyInstance.delete(flush: true)
                 flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'story.label', default: 'Story'), params.id])}"
-                sendMessage("activemq:grizzzly.internal.story.queue", "Story deleted: " + storyCode)
                 redirect(action: "list")
             }
             catch (org.springframework.dao.DataIntegrityViolationException e) {
@@ -100,6 +101,31 @@ class StoryController {
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'story.label', default: 'Story'), params.id])}"
             redirect(action: "list")
+        }
+    }
+    
+    def notify(Story storyInstance) {
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+		xml.story() {
+			grzlId(storyInstance.id)
+			name(storyInstance.code + " - " + storyInstance.iWantTo)
+			description(storyInstance.soThat)
+		}
+           sendMessage("activemq:topic:vobz.cms.story",writer.toString())
+    }
+    
+    def feed = {
+        render(feedType:"rss", feedVersion:"2.0") {
+            title = "My test feed"
+            link = "http://Steven-Heynincks-MacBook-Pro.local/story/feed"
+            description = "The funky Grails news feed"
+            Story.list().each() { story ->
+                entry(story.iWantTo) {
+                    link = "http://Steven-Heynincks-MacBook-Pro.local:8082/grizzzly/story/${story.id}"
+                    story.soThat // return the content
+                }
+            }
         }
     }
 }
