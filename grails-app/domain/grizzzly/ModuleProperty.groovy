@@ -7,11 +7,13 @@ class ModuleProperty {
 	Module module
 	String name
 	String dataType
+	String code
 	
     static constraints = {
 		module(blank:false)
-		name(blank:false, length:25)
-		dataType(inList:["String", "integer"])
+		code(blank:false, length:30)
+		name(blank:false, length:50)
+		dataType(inList:["String", "Integer", "Long"])
 	}
 	
 	String toString() { name }

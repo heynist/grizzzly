@@ -6,9 +6,11 @@ class ModulePropertyInstance {
 	
 	ModuleInstance moduleInstance
 	ModuleProperty moduleProperty
+	Boolean active
 	String value
 	
     static constraints = {
+		active(default: true)
 		moduleInstance(blank:false)
 		moduleProperty(blank:false)
 		value(blank:false)

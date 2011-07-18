@@ -20,7 +20,7 @@ class Project {
     	actors(blank:true, nullable:true)
     }
     
-    static hasMany = [releases:Release, requirements:Requirement, roles:Role, actors:Actor, members:Member, modules:ModuleInstance]
+    static hasMany = [releases:ProjectRelease, requirements:Requirement, roles:Role, actors:Actor, members:Member, modules:ModuleInstance]
     
     String toString() {
     	name + " (" + code + ")"

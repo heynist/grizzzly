@@ -13,8 +13,13 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-            url = "jdbc:hsqldb:mem:devDB"
+           dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+//            url = "jdbc:hsqldb:file:devDB;shutdown=true"
+//            dbCreate = "update"
+            driverClassName = "com.mysql.jdbc.Driver"
+            url ="jdbc:mysql://localhost:3306/grizzzly_vobzcms"
+            username = "root"
+            password = "beatIt"
         }
     }
     test {
@@ -26,7 +31,10 @@ environments {
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+            driverClassName = "com.mysql.jdbc.Driver"
+            url ="jdbc:mysql://localhost:3306/grizzzly_vobzcms"
+            username = "root"
+            password = "musti"
         }
     }
 }

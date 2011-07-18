@@ -19,7 +19,7 @@ grails.project.dependency.resolution = {
         //mavenLocal()
         //mavenCentral()
         //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
+        mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
@@ -27,6 +27,9 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.13'
-test("org.seleniumhq.selenium:selenium-firefox-driver:latest.release")
+//test("org.seleniumhq.selenium:selenium-firefox-driver:latest.release")
+        compile("org.codehaus.groovy.modules.http-builder:http-builder:0.5.1") {
+        	excludes "xercesImpl"
+        }
     }
 }

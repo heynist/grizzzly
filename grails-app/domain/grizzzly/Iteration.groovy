@@ -4,7 +4,7 @@ class Iteration {
 	String name
 	Date startDate
 	Date endDate
-	Release release
+	ProjectRelease release
 	
 	static belongsTo = [project:Project]
 	
@@ -12,7 +12,7 @@ class Iteration {
     	name(blank:false)
     }
     
-    static hasMany = [stories:Story,scenarios:Scenario]
+    static hasMany = [stories:Story]
     
     String toString() {
     	name
