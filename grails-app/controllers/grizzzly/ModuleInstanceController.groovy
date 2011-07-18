@@ -36,5 +36,4 @@ class ModuleInstanceController {
 		}
 		render "broadcast method executed for: " + params
 	}
-	
 }

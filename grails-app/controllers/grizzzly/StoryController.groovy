@@ -3,7 +3,6 @@ package grizzzly
 import groovy.util.XmlSlurper
 import groovy.xml.MarkupBuilder
 
-//extends SecureController
 class StoryController extends SecureController {
 
 	def storyService
@@ -35,8 +34,9 @@ class StoryController extends SecureController {
 		storyInstance = constructStoryName(storyInstance)
         
         if (storyInstance.save(flush: true)) {
-			notify(storyInstance.id)
-            redirect(action:list, id: storyInstance.id)
+		notify(storyInstance.id)
+        	flash.message = "${message(code: 'default.created.message', args: [message(code: 'story.label', default: 'Story'), storyInstance.id])}"
+        	redirect(action: "show", id: storyInstance.id)
         }
         else {
             render(view: "create", model: [storyInstance: storyInstance])
@@ -80,8 +80,9 @@ class StoryController extends SecureController {
             storyInstance.properties = params
             storyInstance = constructStoryName(storyInstance)
             if (!storyInstance.hasErrors() && storyInstance.save(flush: true)) {
-	        	notify(storyInstance.id)
-				redirect(action:show, id: storyInstance.id)
+	        	notify(storyInstance)
+                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'story.label', default: 'Story'), storyInstance.id])}"
+                redirect(action: "show", id: storyInstance.id)
             }
             else {
                 render(view: "edit", model: [storyInstance: storyInstance])
@@ -111,36 +112,26 @@ class StoryController extends SecureController {
             redirect(action: "list")
         }
     }
-
-	private constructStoryName(storyInstance) {
-		if (storyInstance.code && storyInstance.iWantTo)
-		storyInstance.name = storyInstance.code + " - " + storyInstance.iWantTo
-		return storyInstance
-	}
     
-    def notify(Long storyId) {
-		println "StoryController::notify:"
-		sendMessage("vm:story", storyId)
-		def storyInstance = Story.get(storyId)
-		if (storyInstance) {
-//			def msg = 'notification||notice||' + session.user.firstName + ' ' + session.user.lastName + ' updated story "' + storyInstance.name + '".'
-//			broadcaster['/atmosphere/events'].broadcast(msg)
-			
-			// replace displayed content with the newly rendered info
-			def msg = 'nudge||story||' + storyInstance.id
-			//broadcaster['/atmosphere/events'].broadcast(msg)
-			broadcaster['/atmosphere/story'].broadcast(msg)
+    def notify(Story storyInstance) {
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+		xml.story() {
+			grzlId(storyInstance.id)
+			name(storyInstance.code + " - " + storyInstance.iWantTo)
+			description(storyInstance.soThat)
 		}
+           sendMessage("activemq:topic:vobz.cms.story",writer.toString())
     }
     
-    def rss = {
+    def feed = {
         render(feedType:"rss", feedVersion:"2.0") {
-            title = "Grizzzly - Most recently added user stories"
-            link = "http://Steven-Heynincks-MacBook-Pro.local:8080/rss/story"
-            description = "The funky Grizzzly news feed keeping you right on track with the latest and greatest in user story land !"
-            Story.list(order:"desc").each() { story ->
-                entry(story.code + ' - ' + story.iWantTo) {
-                    link = "http://Steven-Heynincks-MacBook-Pro.local:8080/grizzzly/story/${story.id}"
+            title = "My test feed"
+            link = "http://Steven-Heynincks-MacBook-Pro.local/story/feed"
+            description = "The funky Grails news feed"
+            Story.list().each() { story ->
+                entry(story.iWantTo) {
+                    link = "http://Steven-Heynincks-MacBook-Pro.local:8082/grizzzly/story/${story.id}"
                     story.soThat // return the content
                 }
             }

@@ -1,5 +1,3 @@
-
-
 <%@ page import="grizzzly.Story" %>
 <html>
     <head>
