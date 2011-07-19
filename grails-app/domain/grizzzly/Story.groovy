@@ -16,9 +16,6 @@ class Story {
 	//static hasMany = [subStories:Story]
 	//static mappedBy = [subStories:subStories]
 	
-	static belongsTo = [subStoryOf:Story]
-	static hasMany = [subStories:Story]
-	
     static constraints = {
 		grzlUuid(blank:true, nullable:true)
     	code(blank:true, nullable:true)
